@@ -1,0 +1,207 @@
+.nyanvas {
+    position: relative; 
+    margin: 0;
+    background-color: black;
+    z-index: 1;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.whiteText {
+    color: white;
+}
+
+h1 {
+    cursor: default;
+}
+
+@keyframes fadeout {
+    from {
+        opacity: 1
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    to {
+        opacity: 0
+    }
+}
+
+.nyanvasText {
+    font-family: Arial;
+    font-size: 50px;
+    text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black;
+    margin: auto;
+    display: inline-block;
+    text-align: center;
+}
+
+.nyanvasLogo {
+    text-align: center; 
+    width: 100%; 
+    margin: auto; 
+    position: absolute;
+    z-index: -1;
+    user-select: none;
+}
+
+.nyanColors {
+    animation-duration: 10s;
+    animation-name: nyanColorsAnimation;
+    animation-iteration-count: infinite;
+}
+
+@keyframes nyanColorsAnimation {
+    from {
+        color: #7fa2f1
+    }
+    
+    25% {
+        color: #7fa2f1
+    }
+
+    50% {
+        color: #002883
+    }
+
+    75% {
+        color: #002883
+    }
+    
+    to {
+        color: #7fa2f1
+    }
+}
+
+/* 
+    MESSAGE BOX
+*/
+
+.messageBox {
+    position: absolute;
+    width: 30%;
+    height: 10%;
+}
+
+.fadingMessage {
+    user-select: none;
+    padding-left: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    color: #7fa2f1;
+    text-shadow: 0 0 3px black, 0 0 3px black, 0 0 3px black, 0 0 3px black;
+    animation-duration: 4s;
+    animation-name: fadeOutAnimation;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    z-index: 3;
+}
+
+@keyframes fadeOutAnimation {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.fadeOut {
+    animation: fadeOutAnimation 0.5s linear 1 forwards;
+}
+
+.settingsContainer {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    backdrop-filter: brightness(70%) blur(10px);
+}
+
+.settingsMenu {
+    height: 70vh;
+    width: 70vw;
+
+    inset: 0px;
+
+    margin: auto;
+    padding: 5%;
+    position: fixed;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3vw;
+    /* outline: black 2px solid; */
+}
+
+.settingsText {
+    color: white;
+    user-select: none;
+    font-size: 1em;
+}
+
+/* .setting {
+    outline: white 2px solid;
+} */
+
+.controlsList {
+    color: white
+}
+
+.brushSizeSlider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+
+
+
+.imageSelector {
+    display: grid;
+    grid-auto-flow: column;
+    height: 150px;
+}
+
+.imageListDisplay {
+    /* outline: white 2px solid; */
+    font-size: 0.3em;
+    width: 100px;
+    height: 110px;
+}
+
+.imageListImage {
+    height: 100px;
+    width: 100px;
+}
+
+.controlPanel {
+    position: fixed;
+    display: flex;
+    color: white;
+    width: 100%;
+    z-index: 10000000;
+}
+
+.controlButton {
+    color: white;
+    background-color: #7fa2f1;
+
+    text-align: center;
+    vertical-align: middle;
+    height: 30px;
+    width: 30px;
+    font-size: 20px;
+
+    outline: 1px solid white;
+    border-radius: 10px;
+    user-select: none;
+    margin: 5px;
+}
+
+.controlButton:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}

@@ -1,0 +1,39 @@
+.NoPagePage {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    flex-direction: column;
+
+    margin-top: 0px;
+    height: 100vh;
+    background-color: black;
+    
+    color: white;
+    font-family: Helvetica, sans-serif;
+    text-align: center;
+    align-items: center;
+}
+
+.MessageContainer {
+    width: 50vw;
+    height: 50vh;
+    font-size: calc(.5em + min(4vh, 4vw));
+}
+
+.NotFound {
+    margin-top: 0px;
+}
+
+.SlantyFace {
+    animation: wiggle 20s infinite linear alternate;
+}
+
+@keyframes wiggle {
+    from {
+        transform: translateX(-30%) 
+    }
+
+    to {
+        transform: translateX(30%)
+    }
+}

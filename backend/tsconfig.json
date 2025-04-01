@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "module": "esnext",
+      "target": "ES6",
+      "moduleResolution": "bundler",
+      "rootDir": "./src",
+      "outDir": "./dist",
+      "esModuleInterop": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "strict": true,
+    },
+    "include": ["./src/**/*.ts"],
+    "exclude": ["node_modules"]
+  }

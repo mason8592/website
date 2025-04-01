@@ -1,0 +1,23 @@
+# Node.js dependencies
+node_modules/
+dist/
+pnpm-lock.yaml
+
+# Logs & temp files
+*.log
+*.cache
+
+# Environment variables
+.env
+.env.local
+
+# Vite & frontend build files
+.vite/
+.vitepress/
+out/
+
+# Dev environment
+.vscode
+
+# Component backups
+**/_*.tsx

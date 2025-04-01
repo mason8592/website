@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+ 
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="settings-style.css">
+        <link rel="stylesheet" type="text/css" href="../../styles/main.css">
+        <title>NYANVAS</title>
+        <link rel="icon" type="image/x-icon" href="images/blueheart.png">      
+        
+        <meta content="NYANVAS" property="og:title" />
+        <meta content="draw with the wacky characters that live inside neon's mind" property="og:description" />
+        <meta content="https://www.masonlane.dev/nyanvas" property="og:url" />
+        <meta content="images/blueheart.png" property="og:image" />
+        <meta content="#7fa2f1" data-react-helmet="true" name="theme-color" />
+    </head>
+
+    
+
+    <body id="body" style="position: relative; margin: 0">
+        <div id="settings" class="settings" style="display: none;">
+            <div class="brush-size-setting setting">
+                <h1 class="setting-text noselect" id="sizeSliderText">brush size:</h1>
+                <input type="range" min=5 max=1000 step=5 class="slider" id="sizeSlider" oninput="updateBrushSize()">   
+            </div>
+
+            <div class="super-eraser-setting setting">
+                <h1 class="setting-text noselect" id="sizeSliderText" style="width: 125px">enable super eraser mode?</h1>
+                <input type="checkbox" class="checkbox" id="super-eraser-checkbox" checked="true" onclick="updateEraserMode()">   
+                <h2 style="color: white; font-family:Arial, Helvetica, sans-serif; font-size: 10px">super eraser mode makes usage of the eraser destroy all images overlapping that location, whereas normal eraser mode only erases one image at a time</h2>
+            </div>
+            
+            <div class="controls">
+                <h1 class="controls-text setting-text noselect" style="width: 250px">
+                    <br>
+                    <br>
+                    controls:<br>
+                    <br>
+                    shift - bring up this page<br>
+                    <br>
+                    "1" - set brush to babyniko<br>
+                    "2" - set brush to bweep<br>
+                    "3" - set brush to nikoforced<br>
+                    "4" - set brush to tbhcreature<br>
+                    "5" - set brush to plead<br>
+                    "6" - set brush to sus<br>
+                    "7" - set brush to littleghost<br>
+                    "8" - set brush to blehhhcat<br>
+                    "9" - set brush to blueheart<br>
+                    <br>
+                    "t" - toggle painting<br>
+                        (paints constantly without clicking, useful for laptop trackpad)<br>
+                    <br>
+                    "e" - enable eraser<br>
+                    <br>
+                    backspace - delete most recent image<br>
+                    <br>
+                    "-" - decrease brush size<br>
+                    "=" - increase brush size<br>
+                </h1>
+            </div>
+        </div>
+
+        <div id="nyanvas" class="nyanvas-logo noselect">
+            <h1 style="color: #7fa2f1" class="nyanvas-text nyan-colors">NYAN</h1><h1 style="color: white" class="nyanvas-text">VAS</h1>
+        </div>
+
+        <div id="message-box" style="position: absolute">
+
+        </div>
+    </body>
+
+
+    <script>
+        const sliderElem = document.getElementById("sizeSlider")
+        const messageBox = document.getElementById("message-box")
+        const superEraserCheckbox = document.getElementById("super-eraser-checkbox")
+
+        superEraserCheckbox.checked = true
+        sliderElem.value = 100
+
+        let currentlyClicking = false
+        let settingsActive = false
+        let eraserActive = false
+        let togglePaint = false 
+
+        let settings = {
+            superEraserMode: true,
+            brushSize: 100,
+            currentImage: "babyniko.png"
+        }
+
+        let lastPositions = {
+            x: 0,
+            y: 0
+        }
+
+        window.onload = () => {
+            displayMessage("press shift for settings and controls")
+        }
+
+        const body = document.getElementById("body")
+
+        function eraseImage(x, y) {
+            const target = document.elementsFromPoint(x, y).filter(element => element.tagName.toLowerCase() === "img")[0]
+
+            if (!target) return
+
+            target.remove()
+
+            settleImageID(() => {
+                if (settings.superEraserMode) {
+                    eraseImage(x, y)
+                }
+            })
+        }
+
+        function drawImage(imageName, x, y, size) {
+            let image = document.createElement("img")
+
+            image.src = `images/${imageName}`
+            image.draggable = false
+            image.height = size * (1 / (image.naturalWidth / image.naturalHeight / 1))
+            image.width = size
+            image.style = `position: absolute; left: ${x - (image.width / 2)}px; top: ${y - (image.height / 2)}px; user-select: none; z-index: -1;`
+            image.id = imageID >= 1 ? imageID : 1
+            
+            imageID += 1
+
+            body.appendChild(image)
+        }
+
+        function updateBrushSize() {
+            settings.brushSize = sliderElem.value
+
+            updateSizeSlider()
+        }
+
+        function updateSizeSlider() {
+            sliderElem.value = settings.brushSize
+
+            document.getElementById("sizeSliderText").innerHTML = "brush size: " + settings.brushSize
+        }; updateSizeSlider()
+
+        let imageID = 1
+
+        function settleImageID(callback) {
+            return new Promise((resolve, reject) => {
+                if (imageID < 1) {
+                    imageID = 1
+                    resolve()
+                } else {                    
+                    if (document.getElementById(imageID) === null) {
+                        imageID -= 1
+                        settleImageID(callback)
+                    } else {          
+                        callback()
+                        
+                        if (document.getElementById(imageID - 1) === null) {
+                            imageID -= 1
+                            settleImageID(callback)
+                        }
+
+                        resolve()
+                    }
+                }
+            })
+        }
+
+        let currentlyMoving = false
+        let movingTimeout = null
+
+        document.addEventListener("mousemove", (event) => {
+            if (settingsActive) return
+
+            clearTimeout(movingTimeout)
+            
+            if (!currentlyMoving) {
+                currentlyMoving = true
+            }
+
+            movingTimeout = setTimeout(() => {
+                currentlyMoving = false
+                lastPositions = {
+                    x: event.clientX,
+                    y: event.clientY
+                }
+            }, 100)
+
+            if (currentlyClicking || togglePaint) {
+                if (eraserActive) {
+                    eraseImage(event.clientX, event.clientY)
+                } else {
+                    drawImage(settings.currentImage, event.clientX, event.clientY, sliderElem.value)
+                }
+            }
+        })
+
+        setInterval(() => {
+            if ((currentlyClicking || togglePaint) && !(currentlyMoving || settingsActive)) {
+                if (eraserActive) {
+                    eraseImage(lastPositions.x, lastPositions.y)
+                } else {
+                    drawImage(settings.currentImage, lastPositions.x, lastPositions.y, sliderElem.value)
+                }
+            }
+        }, 10)
+
+        document.addEventListener("mousedown", (event) => {
+            if (event.button !== 0) return
+
+            currentlyClicking = true
+
+            if (settingsActive) return
+
+            if (eraserActive) {
+                eraseImage(event.clientX, event.clientY)
+            } else {
+                drawImage(settings.currentImage, event.clientX, event.clientY, sliderElem.value)
+            }
+        })
+
+        document.addEventListener("mouseup", (event) => {
+            currentlyClicking = false
+        })
+
+        document.addEventListener("contextmenu", (event) => {
+            event.preventDefault()
+        })
+
+        function displayMessage(message) {
+            let messageElem = document.createElement("h1")
+
+            messageElem.innerHTML = message
+            messageElem.classList.add("fading-message")
+            messageElem.classList.add("noselect")
+
+            setTimeout(() => {
+                messageElem.remove()
+            }, 4000)
+            
+
+            messageBox.prepend(messageElem)
+        }
+
+        function clearAllImages() {
+            let images = document.getElementsByTagName("img")
+            
+            for (let index = images.length - 1; index >= 0; index--) {
+                images[index].parentNode.removeChild(images[index]);
+            }
+
+            imageID = 1
+        }
+
+        function updateBrush(name) {
+            if (settings.currentImage === name) return
+
+            settings.currentImage = name
+            displayMessage(`switching brush to ${name}`)
+        }
+
+        function updateEraserMode() {
+            if (superEraserCheckbox.checked) {
+                settings.superEraserMode = true
+                displayMessage("turned on super eraser mode")
+            } else {
+                settings.superEraserMode = false
+                displayMessage("turned off super eraser mode")
+            }
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Shift") {
+                settingsActive = !settingsActive
+
+                if (!settingsActive) {
+                    document.getElementById("settings").style.display = "none"
+                } else {
+                    document.getElementById("settings").style.display = "flex"
+                }
+            } else if (event.key === "e") {
+                eraserActive = !eraserActive
+
+                displayMessage(eraserActive ? "eraser now active" : "eraser now inactive")
+            } else if (event.key === "=") {
+                if (settings.brushSize >= sliderElem.max) return
+
+                settings.brushSize += 5
+
+                updateSizeSlider()
+            } else if (event.key === "-") {
+                if (settings.brushSize <= sliderElem.min) return
+                
+                settings.brushSize -= 5
+                
+                updateSizeSlider()
+            } else if (event.key === "t") {
+                togglePaint = !togglePaint
+
+                displayMessage(`toggle paint now ${togglePaint ? "enabled" : "disabled"}`)
+            } else if (event.key === "Backspace") {
+                if (imageID <= 1) return imageID = 1
+
+                displayMessage(`removed image number ${imageID - 1}`)
+
+                settleImageID(() => {
+                    document.getElementById(imageID).remove()
+                })
+            } else if (event.key === "c") {
+                clearAllImages()
+                displayMessage("cleared all images")
+            } else if (event.key === "1") {
+                updateBrush("babyniko.png")
+            } else if (event.key === "2") {
+                updateBrush("bweep.webp")
+            } else if (event.key === "3") {
+                updateBrush("nikoforced.gif")
+            } else if (event.key === "4") {
+                updateBrush("tbhcreature.png")
+            } else if (event.key === "5") {
+                updateBrush("plead.webp")
+            } else if (event.key === "6") {
+                updateBrush("sus.png")
+            } else if (event.key === "7") {
+                updateBrush("littleghost.webp")
+            } else if (event.key === "8") {
+                updateBrush("blehhhcat.png")
+            } else if (event.key === "9") {
+                updateBrush("blueheart.png")
+            }
+        })
+    </script>
+
+</html>
