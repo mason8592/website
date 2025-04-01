@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch --clear-screen=false src/index.ts",
-    "build": "pnpm esbuild src/index.ts --bundle --format=esm --outfile=../dist/backend/index.js --platform=node --external:./node_modules/*"
+    "build": "node build.mjs"
   },
   "dependencies": {
     "koa": "^2.16.0",
