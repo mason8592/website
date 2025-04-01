@@ -1,15 +1,21 @@
 {
-    "compilerOptions": {
-      "module": "esnext",
+    "compilerOptions": { // Many of these options were added based on Matt Pocock's video: https://www.youtube.com/watch?v=eJXVEju3XLM
+      "module": "ESNext",
       "target": "ES6",
       "moduleResolution": "bundler",
-      "rootDir": "./src",
-      "outDir": "./dist",
+      "noEmit": true,
+
+      "lib": ["es2022"],
+
       "esModuleInterop": true,
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
+      "skipLibCheck": true,
+      "verbatimModuleSyntax": true,
+      "allowJs": true,
+      "resolveJsonModule": true,
+      "moduleDetection": "force",
+
       "strict": true,
+      "noUncheckedIndexedAccess": true
     },
-    "include": ["./src/**/*.ts"],
-    "exclude": ["node_modules"]
+    "include": ["src"],
   }

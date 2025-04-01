@@ -2,16 +2,15 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch --clear-screen=false src/index.ts",
-    "build": "vite build",
-    "start": "node dist/index.js"
+    "build": "pnpm esbuild src/index.ts --bundle --format=esm --outfile=../dist/backend/index.js --platform=node --external:./node_modules/*"
   },
   "dependencies": {
-    "koa": "^2.15.0",
+    "koa": "^2.16.0",
     "koa-router": "^12.0.1",
     "koa-send": "^5.0.1",
     "koa-static": "^5.0.0",
-    "mongodb": "^6.11.0",
-    "socket.io": "^4.7.4",
+    "mongodb": "^6.15.0",
+    "socket.io": "^4.8.1",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
@@ -19,6 +18,7 @@
     "@types/koa-router": "^7.4.8",
     "@types/koa-send": "^4.1.6",
     "@types/koa-static": "^4.0.4",
-    "tsx": "^4.7.1"
+    "esbuild": "^0.25.2",
+    "tsx": "^4.19.3"
   }
 }
