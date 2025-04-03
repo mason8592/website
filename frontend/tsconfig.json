@@ -6,18 +6,23 @@
       "module": "ESNext",
       "skipLibCheck": true,
   
-      /* Bundler mode */
+      // Bundling
       "moduleResolution": "bundler",
       "allowImportingTsExtensions": true,
       "resolveJsonModule": true,
       "isolatedModules": true,
       "noEmit": true,
       "jsx": "react-jsx",
-  
-      /* Linting */
+
+      // Linting
       "strict": true,
-      "noFallthroughCasesInSwitch": true
+      "noFallthroughCasesInSwitch": true,
+
+      // Aliases
+      "baseUrl": "./",
+      "paths": {
+        "@hooks/*": ["src/hooks/*"]
+      }
     },
-    "include": ["src"],
-    // "references": [{ "path": "./tsconfig.node.json" }]
+    "include": ["src"]
   }
